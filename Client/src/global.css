@@ -1,0 +1,67 @@
+/* src/global.css */
+
+.test>.css-1ewigxo-MuiFormLabel-root-MuiInputLabel-root{
+  top:10px !important;
+  display:none
+} 
+@font-face {
+    font-family: 'Bold';
+    src: url('../src/assests/fonts/Poppins-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Medium';
+    src: url('../src/assests/fonts/Poppins-Medium.ttf') format('truetype');
+    font-weight:normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Regular';
+    src: url('../src/assests/fonts/Poppins-Regular.ttf') format('truetype');
+    font-weight:lighter;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Semibold';
+    src: url('../src/assests/fonts/Poppins-SemiBold.ttf') format('truetype');
+    font-weight:500;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Extrabold';
+    src: url('../src/assests/fonts/Poppins-ExtraBold.ttf') format('truetype');
+    font-weight:bolder;
+    font-style: normal;
+  }
+  
+
+  body {
+    font-family: 'Poppins', sans-serif;
+  }
+  .Bold { 
+    font-family: Bold !important;
+   }
+  
+  
+   .Medium { 
+    font-family: Medium !important;
+   }
+   
+   .Regular { 
+    font-family: Regular !important;
+   }
+  
+   .Semibold { 
+    font-family: Semibold !important;
+   }
+  
+   .Extrabold { 
+    font-family: Extrabold !important;
+   }
+  
+   
+ 

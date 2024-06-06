@@ -1,0 +1,16 @@
+const PATHS = {
+  index: "/",
+  login: "/login",
+  signup: "/signup",
+  payment: "/payment",
+  clientprofile: "/clientprofile",
+  vendorprofile: "/vendorprofile",
+  bookings: "/bookings",
+  deals: "/deals",
+  home: "/home",
+  services: "/services",
+  addservices: "/addservices",
+  vendorbookings: "/vendorbookings",
+  reviews: "/reviews",
+  chat: "/chat",
+};

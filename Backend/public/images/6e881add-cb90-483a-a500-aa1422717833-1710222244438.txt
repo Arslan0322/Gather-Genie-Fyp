@@ -1,0 +1,480 @@
+Profile Tab:
+import * as React from "react";
+import PropTypes from "prop-types";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import ChatBotDropdownButton from "./ChatBotModeDropdown";
+import ConversationTab from "./ConversationTab";
+import InterventionTab from "./InterventionTab";
+import { useState } from "react";
+import { useIsMobile } from "../../contexts/isMobile";
+import CollectionsIcon from "@mui/icons-material/Collections";
+import GalleryTab from "./GalleryTab";
+import CareAllyTab from "./CareAllyTab";
+import HandshakeIcon from '@mui/icons-material/Handshake';
+
+function CustomTabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+CustomTabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
+
+export default function ProfileTabs({
+  refetchAgain,
+  isDrawer,
+  originalMessage,
+  chatbotReply,
+  patient,
+  reasoning,
+  createdAt,
+  userFeedback,
+  queueId,
+  queueStatus,
+  title,
+  patientDrawer,
+  consent,
+  acuity,
+  taskCategory,value,setValue,
+  careAllyData,
+  refetchCareAllyAgain
+}) {
+  
+  const isMobile = useIsMobile();
+  const [selectedValue, setSelectedValue] = useState(null);
+  
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  console.log('care ally data:', careAllyData)
+
+  const tabItems = [];
+
+  tabItems.push(
+    <Tab
+      key="conversation"
+      label={
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            fontSize: "14px",
+            fontWeight: 600,
+            textTransform: "capitalize",
+            color: value === 0 ? "#000" : "rgba(0,0,0,0.60)",
+          }}
+        >
+          <ChatBubbleOutlineIcon style={{ marginRight: "5px" }} />
+          Conversation
+        </div>
+      }
+      {...a11yProps(0)}
+    />
+  );
+
+  if (title !== "patients" && title !== "profile") {
+    tabItems.push(
+      <Tab
+        key="intervention"
+        label={
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              textTransform: "capitalize",
+              fontSize: "14px",
+              fontWeight: 600,
+              color: value === 1 ? "#000" : "rgba(0,0,0,0.60)",
+            }}
+          >
+            <PersonOutlineIcon style={{ marginRight: "5px" }} />
+            Human Intervention
+          </div>
+        }
+        {...a11yProps(1)}
+      />
+    );
+  }
+
+  if (title === "patients") {
+    tabItems.push(
+      <Tab
+        key="gallery"
+        label={
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              textTransform: "capitalize",
+              fontSize: "14px",
+              fontWeight: 600,
+              color: value === 1 ? "#000" : "rgba(0,0,0,0.60)",
+            }}
+          >
+            <CollectionsIcon style={{ marginRight: "5px" }} />
+            Gallery
+          </div>
+        }
+        {...a11yProps(1)}
+      />
+    );
+
+    if(careAllyData){
+      tabItems.push(
+      <Tab
+        key="care-ally"
+        label={
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              textTransform: "capitalize",
+              fontSize: "14px",
+              fontWeight: 600,
+              color: value === 2 ? "#000" : "rgba(0,0,0,0.60)",
+            }}
+          >
+            <HandshakeIcon style={{ marginRight: "5px" }}/>
+            Care Ally
+          </div>
+        }
+        {...a11yProps(2)}
+      />
+    );
+    }
+  }
+
+  React.useEffect(()=>{
+    if(refetchCareAllyAgain){
+      refetchCareAllyAgain()
+    }
+  },[refetchCareAllyAgain])
+
+  return (
+    <Box sx={{ width: "100%" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          flexDirection: isMobile ? "column" : "row",
+          position: "sticky",
+          top: patientDrawer ? "5.4rem" : "5.8rem",
+          backgroundColor: "white",
+          height: isDrawer ? "100%" : "65%",
+          zIndex: "990",
+          padding: 3,
+        }}
+      >
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="basic tabs example"
+          TabIndicatorProps={{
+            sx: {
+              left: `calc(${value} * 15%)`,
+              "&.MuiTabs-indicator": {
+                backgroundColor: "#000",
+              },
+            },
+          }}
+        >
+          {tabItems}
+        </Tabs>
+        {value === 0 && ( // Add this condition to hide the dropdown when Care Ally tab is selected
+          <div style={{ margin: 2 }}>
+            <ChatBotDropdownButton
+              chatBotEnabled={patient?.chatMode}
+              selectedValue={selectedValue}
+              setSelectedValue={setSelectedValue}
+              patientId={patient?._id}
+            />
+          </div>
+        )}
+      </div>
+      <CustomTabPanel value={value} index={0}>
+        <ConversationTab
+          id={patient?._id}
+          consent={consent}
+          isDrawer={isDrawer}
+          selectedValue={selectedValue}
+          chatBot={patient?.chatBotEnabled}
+        />
+      </CustomTabPanel>
+      {title !== "patients" && title !== "profile" && (
+        <CustomTabPanel value={value} index={1}>
+          <InterventionTab
+            isDrawer={isDrawer}
+            refetchAgain={refetchAgain}
+            queueId={queueId}
+            userFeedback={userFeedback}
+            originalMessage={originalMessage}
+            chatbotReply={chatbotReply}
+            patient={patient}
+            reasoning={reasoning}
+            createdAt={createdAt}
+            queueStatus={queueStatus}
+            patientDrawer={patientDrawer}
+            acuity={acuity}
+            taskCategory={taskCategory}
+          />
+        </CustomTabPanel>
+      )}
+      {title === "patients" && (
+        <>
+          <CustomTabPanel value={value} index={1}>
+            <GalleryTab id={patient?._id} />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={2}>
+            <CareAllyTab
+              id={patient?._id}
+              consent={consent}
+              isDrawer={isDrawer}
+              selectedValue={selectedValue}
+              chatBot={patient?.chatBotEnabled}
+              careAllyData={careAllyData}
+            />
+          </CustomTabPanel>
+        </>
+      )}
+    </Box>
+  );
+}
+
+ProfileMsgBox:
+import React from "react";
+import ProfileTabs from "./ProfileTab";
+
+export default function ProfileMsgBox({
+  refetchAgain,
+  queueId,
+  originalMessage,
+  chatbotReply,
+  patient,
+  reasoning,
+  createdAt,
+  isDrawer,
+  userFeedback,
+  queueStatus,
+  title,
+  patientDrawer,
+  consent,
+  acuity,
+  taskCategory,
+  value,
+  setValue,
+  careAllyData,
+  refetchCareAllyAgain
+}) {
+  return (
+    <>
+      <ProfileTabs
+        isDrawer={isDrawer}
+        refetchAgain={refetchAgain}
+        queueId={queueId}
+        userFeedback={userFeedback}
+        originalMessage={originalMessage}
+        chatbotReply={chatbotReply}
+        patient={patient}
+        reasoning={reasoning}
+        createdAt={createdAt}
+        queueStatus={queueStatus}
+        title={title}
+        patientDrawer={patientDrawer}
+        consent={consent}
+        acuity={acuity}
+        taskCategory={taskCategory}
+        value={value} setValue={setValue}
+careAllyData={careAllyData?.careAlly ? careAllyData?.careAlly : null}
+refetchCareAllyAgain={refetchCareAllyAgain}
+      />
+    </>
+  );
+}
+
+
+index.js (queue profile)
+import React, { useState, useEffect } from "react";
+import { Grid } from "@mui/material";
+import { useLocation } from "react-router-dom";
+import { useGetPatientByIDQuery } from "../../../store/patientsSlice";
+import { useGetPatientQueueProfileByIDQuery } from "../../../store/patientQueuesSlice";
+import { useGetProfileByPatientIDQuery } from "../../../store/riskProfilesSlice";
+import { useNavigate } from "react-router-dom";
+import { useDeletePatientMutation } from "../../../store/patientsSlice";
+import { PATHS } from "../../../constants/routes";
+import { toast } from "react-toastify";
+import { CircularLoader } from "../../../Components";
+import ProfileMsgBox from "../../../Components/MessageLayout/ProfileMsgBox";
+import ProfileDetailSidebar from "./ProfileDetailSidebar";
+import { QueueProfileCard } from "./QueueProfile";
+import { useIsHovered } from "../../../contexts/isHovered";
+import { useIsMobile } from "../../../contexts/isMobile";
+import axios from "axios"
+import { getTokenFromLocalStroage } from '../../../utils'
+
+export function QueueProfile() {
+  const location = useLocation();
+  const isMobile = useIsMobile();
+  const { hovered } = useIsHovered();
+  const [openModal, setOpenModal] = React.useState(false);
+  const [value, setValue] = useState(0);
+  const [careAllyData, setCareAllyData] = useState(null);
+
+  const id = location.pathname.split("/").reverse()[0];
+  const { data, isError, isLoading, isSuccess, refetch } =
+    useGetPatientQueueProfileByIDQuery(id, { refetchOnMountOrArgChange: true });
+  const [deletePatient] = useDeletePatientMutation();
+  const navigate = useNavigate();
+
+  const config = {
+		headers: { Authorization: `Bearer ${getTokenFromLocalStroage()}` },
+	}
+
+  const fetchData = async (patientId) => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_BASE_API_URL}/v2/careAlly/patient/${patientId}`, config);
+      setCareAllyData(response.data);
+    } catch (error) {
+      setCareAllyData(null);
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const refetchAgain = () => {
+    refetch();
+  };
+
+  const onDelete = (id) => {
+    deletePatient(id)
+      .unwrap()
+      .then(() => {
+        refetch();
+        toast.success("Successfully deleted!");
+      })
+      .catch((e) => toast.error(e.message || "some error occured!"))
+      .finally(() => navigate(PATHS.patientsIndexPage));
+  };
+
+
+  // Dummy Data for accordion
+  const accordianData = [{ id: 1, title: "Form" }];
+
+  const refetchCareAllyAgain = () =>{
+    if(data){
+      fetchData(data?.patient?._id)
+    }
+  }
+
+  useEffect(() => {
+    if(data){
+      fetchData(data?.patient?._id);
+    }
+  }, [data]);
+
+  if (isError) return <div>some error</div>;
+  if (isLoading)
+    return (
+      <div>
+        <CircularLoader />
+      </div>
+    );
+    
+    const name = `${data?.patient?.firstName} ${data?.patient?.lastName}`;
+
+    const {
+      acuity,
+      patient,
+      taskCategory,
+      originalMessage,
+      chatbotReply,
+      reasoning,
+      createdAt,
+      userFeedback,
+      _id,
+      status,
+    } = data;
+
+  return (
+    <div
+      style={{
+        backgroundColor: "white",
+        padding: isMobile ? "1.5rem 1rem" : "1.5rem 2rem",
+        overflow: "hidden",
+        height: "88vh",
+      }}
+    >
+      {isSuccess && (
+        <Grid container spacing={2} justifyContent={"space-around"}>
+          <Grid item md={12} xs={12}>
+            <QueueProfileCard
+              id={patient?._id}
+              name={name}
+              email={patient?.email}
+              path={null}
+              acuity={acuity}
+              taskCategory={taskCategory}
+              patient={patient}
+            />
+          </Grid>
+          <Grid item md={8.5} xs={12}>
+            <ProfileMsgBox
+              isDrawer={false}
+              refetchAgain={refetchAgain}
+              queueId={_id}
+              userFeedback={userFeedback}
+              originalMessage={originalMessage}
+              chatbotReply={chatbotReply}
+              patient={patient}
+              reasoning={reasoning}
+              createdAt={createdAt}
+              queueStatus={status}
+              patientDrawer={false}
+              acuity={acuity}
+              taskCategory={taskCategory}
+              value={value} setValue={setValue}
+careAllyData={careAllyData?.careAlly ? careAllyData?.careAlly : null}
+refetchCareAllyAgain={refetchCareAllyAgain}
+            />
+          </Grid>
+          {!isMobile && (
+            <Grid item md={3} xs={3}>
+              <ProfileDetailSidebar name={name} path={null} patient={patient} />
+            </Grid>
+          )}
+        </Grid>
+      )}
+    </div>
+  );
+}
+

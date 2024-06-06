@@ -1,0 +1,41 @@
+[org 0x0100]
+jmp start
+stdid: db 2, 2, 0, 4, 2, 4, 7, 8, 3
+result_digit: db 0
+small_digit: db 0
+mul_output: db 0
+start:
+mov si, stdid
+mov cx, 9
+mov al, [si]
+mov bl, al
+inc si
+dec cx
+find_result_digit:
+cmp bl, [si]
+jae not_result_digit
+mov bl, [si]
+not_result_digit:
+inc si
+loop find_result_digit
+mov [result_digit], bl
+mov si, stdid
+mov cx, 9
+mov al, [si]
+mov bl, al
+inc si
+dec cx
+find_small_digit:
+cmp bl, [si]
+jbe not_small_digit
+mov bl, [si]
+not_small_digit:
+inc si
+loop find_small_digit
+mov [small_digit], bl
+mov al, [result_digit]
+mov bl, [small_digit]
+imul ax, bx
+mov [mul_output], al
+mov ax, 0x4c00
+int 0x21
