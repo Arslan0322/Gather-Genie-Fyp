@@ -12,10 +12,10 @@ Make sure you have Node.js and npm installed on your system.
 
 1. Clone the repository to your local machine:
 
-   git clone https://github.com/daniyalayyaz/event-app-backend.git
+   git clone https://github.com/Arslan0322/SP23-SE33-Gather-Genie.git
 
 2. Navigate to the project directory:
-    cd event-app-backend
+    cd backend
 
 3. Install the project dependencies:
     `npm install`
