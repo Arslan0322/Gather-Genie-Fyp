@@ -12,7 +12,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
    git clone https://github.com/Arslan0322/SP23-SE33-Gather-Genie.git
 
 2. Navigate to the project directory:
-    cd event-app-admin
+    cd admin
 
 3. Install the project dependencies:
     `npm install`
