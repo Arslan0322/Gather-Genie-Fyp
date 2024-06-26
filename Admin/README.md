@@ -9,7 +9,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 1. Clone the repository to your local machine:
 
-   git clone https://github.com/daniyalayyaz/event-app-admin.git
+   git clone https://github.com/Arslan0322/SP23-SE33-Gather-Genie.git
 
 2. Navigate to the project directory:
     cd event-app-admin
@@ -29,8 +29,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
    - Password: 1234
 
 2. **Stripe Dashboard:**
-   - Email: vojih74672@htoal.com
-   - Password: event-app-123
+   - Email: Eventapp894@gmail.com
 
 Please use these credentials for initial access.
    
